@@ -70,12 +70,25 @@ npm run dev           # http://localhost:5173
 
 ## Tests
 
-Los tests de integración corren contra un Postgres real y separado del de desarrollo:
+### Backend
+
+Tests de integración (Jest + Supertest) contra un Postgres real, separado del de desarrollo:
 
 ```bash
 docker compose -f docker-compose.test.yml up -d
 cd backend
-npm test
+npm test              # tests
+npm run test:coverage # tests + reporte de cobertura (backend/coverage/index.html)
+```
+
+### Frontend
+
+Tests unitarios (Vitest + React Testing Library) sobre lógica pura, servicios y componentes:
+
+```bash
+cd frontend
+npm test              # tests
+npm run test:coverage # tests + reporte de cobertura (frontend/coverage/index.html)
 ```
 
 ## Scripts útiles (backend)

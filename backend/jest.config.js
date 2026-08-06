@@ -12,4 +12,12 @@ export default {
   testMatch: ['**/tests/**/*.spec.ts'],
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   testTimeout: 15000,
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/main.ts',
+    '!src/core/database/migrations/**',
+    '!src/core/database/seeds/**',
+  ],
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'text-summary', 'html', 'lcov'],
 };

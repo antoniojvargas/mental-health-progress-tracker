@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth.js';
 import { useLogs } from '../hooks/useLogs.js';
 import { useLogSocket } from '../hooks/useLogSocket.js';
-import { logsApi } from '../services/logs.api.js';
 import { Button } from '../components/ui/Button.js';
 import { Skeleton } from '../components/ui/Skeleton.js';
 import { Logo } from '../components/ui/Logo.js';
@@ -10,7 +9,10 @@ import { TrendChart } from '../components/charts/TrendChart.js';
 import { MetricSelector } from '../components/charts/MetricSelector.js';
 import { RangeToggle } from '../components/charts/RangeToggle.js';
 import { DailyLogModal } from '../components/daily-log/DailyLogModal.js';
-import type { DailyLog } from '../types/daily-log.js';
+
+function todayIso(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
 export function DashboardPage() {
   const { user, logout } = useAuth();
@@ -18,13 +20,13 @@ export function DashboardPage() {
   const { logs, loading, error, refetch, mergeLog } = useLogs(range);
   const [metrics, setMetrics] = useState<string[]>(['mood', 'anxiety', 'sleepHours']);
   const [modalOpen, setModalOpen] = useState(false);
-  const [todayLog, setTodayLog] = useState<DailyLog | null | undefined>(undefined);
 
   useLogSocket(mergeLog);
 
-  useEffect(() => {
-    logsApi.today().then(setTodayLog).catch(() => setTodayLog(null));
-  }, [logs]);
+  // Both range windows (week/month) always include today, so the already-loaded `logs`
+  // fully answers "did I log today?" — no separate fetch needed, and this stays correct
+  // for free as `logs` updates from a save or a live socket event.
+  const todayLog = loading ? undefined : (logs.find((l) => l.logDate === todayIso()) ?? null);
 
   const firstName = user?.name?.split(' ')[0] ?? '';
 

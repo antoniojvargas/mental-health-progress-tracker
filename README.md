@@ -11,6 +11,16 @@ Recharts · Docker Compose.
 Ver [`docs/architecture.md`](docs/architecture.md) para el detalle de decisiones (esquema de
 datos, sesión por cookie httpOnly, migraciones, flujo OAuth).
 
+**Tipos compartidos:** `shared/daily-log.d.ts` es la única fuente de verdad para la forma de un
+registro diario — el backend (entidad TypeORM + schema zod) y el frontend (tipos de formulario/API)
+lo importan vía `import type`, así que un campo o valor de enum que cambie ahí y no se actualice
+en un consumidor falla al compilar en vez de desincronizarse en silencio. Al ser type-only se
+borra por completo al compilar: no agrega paquete, build, ni dependencia entre los Dockerfiles.
+
+**Rate limiting:** `/api/auth/google` y `/api/auth/google/callback` están limitados a 20
+solicitudes / 15 min por IP; `POST /api/logs` a 30 / 15 min por usuario (no por IP, para que
+usuarios detrás del mismo NAT no compartan cupo).
+
 ## Arranque en un comando
 
 ### 1. Credenciales de Google OAuth

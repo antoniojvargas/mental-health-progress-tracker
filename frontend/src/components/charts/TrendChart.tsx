@@ -1,4 +1,4 @@
-import type { SVGProps } from 'react';
+import { useMemo, type SVGProps } from 'react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -16,6 +16,26 @@ interface ChartPoint {
 }
 
 export function TrendChart({ logs, metricKeys }: TrendChartProps) {
+  const metrics = metricKeys.map(getMetric);
+  const scaleMetrics = metrics.filter((m) => m.axis === 'scale');
+  const hoursMetrics = metrics.filter((m) => m.axis === 'hours');
+
+  // Recomputed only when the underlying logs or the chosen metrics actually change, not on
+  // every render of the dashboard around it (e.g. opening the daily-log modal). Must run
+  // before the empty-state early return below — React hooks can't be called conditionally.
+  const data = useMemo<ChartPoint[]>(
+    () =>
+      logs.map((log) => {
+        const point: ChartPoint = { logDate: log.logDate };
+        for (const metric of metrics) {
+          point[metric.key] = metric.format(log);
+        }
+        return point;
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [logs, metricKeys.join(',')],
+  );
+
   if (logs.length === 0) {
     return (
       <div className="flex h-72 flex-col items-center justify-center rounded-xl2 border border-ink-100 bg-paper-50 text-center">
@@ -25,18 +45,6 @@ export function TrendChart({ logs, metricKeys }: TrendChartProps) {
       </div>
     );
   }
-
-  const metrics = metricKeys.map(getMetric);
-  const scaleMetrics = metrics.filter((m) => m.axis === 'scale');
-  const hoursMetrics = metrics.filter((m) => m.axis === 'hours');
-
-  const data: ChartPoint[] = logs.map((log) => {
-    const point: ChartPoint = { logDate: log.logDate };
-    for (const metric of metrics) {
-      point[metric.key] = metric.format(log);
-    }
-    return point;
-  });
 
   return (
     <ResponsiveContainer width="100%" height={288}>

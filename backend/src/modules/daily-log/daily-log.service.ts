@@ -3,7 +3,16 @@ import { toDailyLogDto, type DailyLogDto } from './daily-log.mapper.js';
 import type { CreateDailyLogInput } from './daily-log.schema.js';
 import type { LogEventEmitter } from '../../realtime/log-events.js';
 
-let logEventEmitter: LogEventEmitter | null = null;
+// Null object: swapped for the real Socket.IO-backed emitter by setLogEventEmitter() during
+// server startup. Starting from a no-op instead of `null` means a request that somehow lands
+// before that wiring runs just skips the emit silently instead of needing a null-check (or,
+// worse, throwing) at every call site.
+const noopEmitter: LogEventEmitter = {
+  emitLogCreated: () => {},
+  emitLogUpdated: () => {},
+};
+
+let logEventEmitter: LogEventEmitter = noopEmitter;
 
 export function setLogEventEmitter(emitter: LogEventEmitter): void {
   logEventEmitter = emitter;
@@ -24,9 +33,9 @@ export const dailyLogService = {
     const dto = toDailyLogDto(log);
 
     if (created) {
-      logEventEmitter?.emitLogCreated(userId, dto);
+      logEventEmitter.emitLogCreated(userId, dto);
     } else {
-      logEventEmitter?.emitLogUpdated(userId, dto);
+      logEventEmitter.emitLogUpdated(userId, dto);
     }
 
     return { dto, created };

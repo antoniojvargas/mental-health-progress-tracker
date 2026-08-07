@@ -9,40 +9,15 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity.js';
+import type {
+  ActivityType,
+  SleepDisturbance,
+  SocialFrequency,
+  Symptom,
+  SymptomType,
+} from '../../../../shared/daily-log.js';
 
-export type SleepDisturbance =
-  | 'none'
-  | 'insomnia'
-  | 'nightmares'
-  | 'frequent_waking'
-  | 'early_waking';
-
-export type ActivityType =
-  | 'none'
-  | 'walking'
-  | 'running'
-  | 'gym'
-  | 'yoga'
-  | 'cycling'
-  | 'sports'
-  | 'other';
-
-export type SocialFrequency = 'none' | 'rare' | 'occasional' | 'frequent' | 'daily';
-
-export type SymptomType =
-  | 'low_mood'
-  | 'hopelessness'
-  | 'fatigue'
-  | 'irritability'
-  | 'panic'
-  | 'restlessness'
-  | 'concentration'
-  | 'appetite_change';
-
-export interface Symptom {
-  type: SymptomType;
-  severity: 1 | 2 | 3 | 4 | 5;
-}
+export type { ActivityType, SleepDisturbance, SocialFrequency, Symptom, SymptomType };
 
 @Entity({ name: 'daily_logs' })
 @Index(['userId', 'logDate'], { unique: true })

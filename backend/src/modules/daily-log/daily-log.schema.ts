@@ -1,8 +1,32 @@
 import { z } from 'zod';
+import type {
+  ActivityType,
+  SleepDisturbance,
+  SocialFrequency,
+  SymptomType,
+} from '../../../../shared/daily-log.js';
 
-const SLEEP_DISTURBANCES = ['none', 'insomnia', 'nightmares', 'frequent_waking', 'early_waking'] as const;
-const ACTIVITY_TYPES = ['none', 'walking', 'running', 'gym', 'yoga', 'cycling', 'sports', 'other'] as const;
-const SOCIAL_FREQUENCIES = ['none', 'rare', 'occasional', 'frequent', 'daily'] as const;
+// `satisfies` ties each runtime array zod needs back to the shared union type: add or rename
+// a value in shared/daily-log.d.ts without updating the matching array here (or vice versa),
+// and this fails to compile instead of the two silently drifting apart.
+const SLEEP_DISTURBANCES = [
+  'none',
+  'insomnia',
+  'nightmares',
+  'frequent_waking',
+  'early_waking',
+] as const satisfies readonly SleepDisturbance[];
+const ACTIVITY_TYPES = [
+  'none',
+  'walking',
+  'running',
+  'gym',
+  'yoga',
+  'cycling',
+  'sports',
+  'other',
+] as const satisfies readonly ActivityType[];
+const SOCIAL_FREQUENCIES = ['none', 'rare', 'occasional', 'frequent', 'daily'] as const satisfies readonly SocialFrequency[];
 const SYMPTOM_TYPES = [
   'low_mood',
   'hopelessness',
@@ -12,7 +36,7 @@ const SYMPTOM_TYPES = [
   'restlessness',
   'concentration',
   'appetite_change',
-] as const;
+] as const satisfies readonly SymptomType[];
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Expected format YYYY-MM-DD');
 

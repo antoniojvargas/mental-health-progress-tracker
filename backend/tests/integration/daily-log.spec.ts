@@ -50,6 +50,26 @@ describe('daily logs', () => {
     expect(list.body.data).toHaveLength(1);
   });
 
+  it('survives concurrent submissions for the same day without duplicating rows or crashing', async () => {
+    const { cookie } = await createTestUser();
+    const logDate = new Date(Date.now() - 2 * 86_400_000).toISOString().slice(0, 10);
+
+    // Two "simultaneous" saves for the same (userId, logDate) — e.g. a double-click or a
+    // client retry racing the original request. A select-then-insert/update implementation
+    // would let both see "no existing row" and crash the loser on the unique constraint;
+    // the atomic ON CONFLICT upsert in the repository must let both succeed.
+    const [first, second] = await Promise.all([
+      request(app).post('/api/logs').set('Cookie', cookie).send(validLog({ logDate, moodRating: 3 })),
+      request(app).post('/api/logs').set('Cookie', cookie).send(validLog({ logDate, moodRating: 4 })),
+    ]);
+
+    expect([first.status, second.status].sort()).toEqual([200, 201]);
+    expect(first.body.id).toBe(second.body.id);
+
+    const list = await request(app).get(`/api/logs?from=${logDate}&to=${logDate}`).set('Cookie', cookie);
+    expect(list.body.data).toHaveLength(1);
+  });
+
   it('rejects invalid payloads with 400 and validation details', async () => {
     const { cookie } = await createTestUser();
     const res = await request(app)

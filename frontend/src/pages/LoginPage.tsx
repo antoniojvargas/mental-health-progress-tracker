@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
+import { Logo } from '../components/ui/Logo.js';
 
 export function LoginPage() {
   const { user, loading } = useAuth();
@@ -16,33 +17,42 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-calm-50 to-sage-50 px-4">
-      <div className="w-full max-w-sm animate-slide-up rounded-xl2 bg-white/80 p-8 text-center shadow-sm backdrop-blur">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-sage-100 text-2xl">
-          🌿
-        </div>
-        <h1 className="text-xl font-bold text-dusk-700">Progress Tracker</h1>
-        <p className="mt-2 text-sm text-dusk-400">
-          Un espacio tranquilo para llevar registro de cómo te sientes, día a día.
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-paper-100 px-4">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-64 opacity-70 blur-2xl"
+        style={{
+          background: 'linear-gradient(180deg, #D7E6EA 0%, #F6F1E7 55%, transparent 100%)',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full opacity-40 blur-3xl"
+        style={{ background: '#F3DCC9' }}
+      />
+
+      <div className="relative w-full max-w-sm animate-slide-up rounded-xl2 border border-ink-100 bg-white/90 p-8 text-center shadow-sm backdrop-blur">
+        <Logo className="mx-auto h-14 w-14" />
+        <h1 className="mt-5 font-display text-2xl font-semibold text-ink-700">Bitácora</h1>
+        <p className="mt-2 text-sm leading-relaxed text-ink-500">
+          Un espacio tranquilo para anotar cómo va cada día. Sin calificarlo — solo registrarlo.
         </p>
 
         {showError && (
-          <p className="mt-4 rounded-lg bg-calm-100 px-3 py-2 text-sm text-dusk-600" role="alert">
+          <p className="mt-4 rounded-lg border border-ink-100 bg-paper-100 px-3 py-2 text-sm text-ink-600" role="alert">
             No pudimos completar el inicio de sesión. Inténtalo de nuevo.
           </p>
         )}
 
         <a
           href="/api/auth/google"
-          className="mt-6 flex w-full items-center justify-center gap-3 rounded-full border border-dusk-100 bg-white px-4 py-3 font-semibold text-dusk-700 shadow-sm transition hover:shadow-md focus-visible:ring-2 focus-visible:ring-sage-400"
+          className="mt-6 flex w-full items-center justify-center gap-3 rounded-lg border border-ink-100 bg-white px-4 py-3 font-medium text-ink-700 shadow-sm transition hover:shadow-md focus-visible:ring-2 focus-visible:ring-clearsky-400"
         >
           <GoogleIcon />
           Continuar con Google
         </a>
 
-        <p className="mt-6 text-xs text-dusk-300">
-          Tus registros son privados y solo tú puedes verlos.
-        </p>
+        <p className="mt-6 font-mono text-xs text-ink-300">Tus notas son privadas. Solo tú puedes leerlas.</p>
       </div>
     </div>
   );

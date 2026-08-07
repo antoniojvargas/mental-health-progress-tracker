@@ -15,21 +15,23 @@ export function SliderField({ id, label, value, min, max, onChange, describe, hi
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-sm font-medium text-dusk-600">
+        <span className="flex items-center gap-1.5 text-sm font-medium text-ink-600">
           <label htmlFor={id}>{label}</label>
           {hint && (
             <Tooltip label={hint}>
               <span
                 tabIndex={0}
                 aria-label={`Qué significa ${label}`}
-                className="flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-calm-100 text-[10px] text-dusk-400"
+                className="flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-paper-200 text-[10px] text-ink-400"
               >
                 ?
               </span>
             </Tooltip>
           )}
         </span>
-        <span className="text-sm font-semibold text-sage-600">{describe ? describe(value) : value}</span>
+        <span className="font-mono text-sm font-medium text-clearsky-600">
+          {describe ? describe(value) : value}
+        </span>
       </div>
       <input
         id={id}
@@ -38,7 +40,7 @@ export function SliderField({ id, label, value, min, max, onChange, describe, hi
         max={max}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="h-2 w-full cursor-pointer appearance-none rounded-full bg-calm-100 accent-sage-500"
+        className="h-2 w-full cursor-pointer appearance-none rounded-full bg-paper-200 accent-clearsky-500"
       />
     </div>
   );

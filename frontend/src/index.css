@@ -4,11 +4,11 @@
 
 @layer base {
   body {
-    @apply bg-calm-50 text-dusk-700 antialiased;
+    @apply bg-paper-100 text-ink-700 antialiased;
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-sage-400 ring-offset-2 ring-offset-calm-50;
+    @apply outline-none ring-2 ring-clearsky-400 ring-offset-2 ring-offset-paper-100;
   }
 }
 

@@ -15,7 +15,7 @@ export function Tooltip({ label, children }: { label: string; children: ReactNod
       {visible && (
         <span
           role="tooltip"
-          className="animate-fade-in absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-dusk-700 px-3 py-1.5 text-xs text-white shadow-md"
+          className="animate-fade-in absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-ink-700 px-3 py-1.5 text-xs text-white shadow-md"
         >
           {label}
         </span>

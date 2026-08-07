@@ -5,38 +5,64 @@ export default {
   theme: {
     extend: {
       colors: {
-        calm: {
-          50: '#f7f5f0',
-          100: '#eee9de',
-          200: '#ddd3bd',
-          300: '#c3b394',
-          400: '#a8926f',
+        // Warm linen paper — page and card backgrounds.
+        paper: {
+          50: '#FBF8F2',
+          100: '#F6F1E7',
+          200: '#EAE0CB',
+          300: '#D7C7A2',
+          400: '#BFA679',
         },
-        sage: {
-          50: '#f2f6f3',
-          100: '#e1ebe3',
-          200: '#c3d7c8',
-          300: '#9cbba4',
-          400: '#749d7e',
-          500: '#557f60',
-          600: '#43654c',
+        // Teal-charcoal "ink" — all text and hairline borders.
+        ink: {
+          50: '#EEF2F1',
+          100: '#DCE4E2',
+          200: '#B9C9C6',
+          300: '#8A9B97',
+          400: '#5D726D',
+          500: '#3E524E',
+          600: '#33453F',
+          700: '#2B3A3A',
         },
-        dusk: {
-          50: '#f2f5f9',
-          100: '#e2e9f2',
-          200: '#c5d3e5',
-          300: '#9fb4d0',
-          400: '#7690b6',
-          500: '#57729c',
-          600: '#455b7e',
-          700: '#394a66',
+        // Dusty blue — the primary interactive accent (buttons, focus, active states).
+        clearsky: {
+          50: '#EDF3F5',
+          100: '#D7E6EA',
+          200: '#B4CFD7',
+          300: '#96BAC5',
+          400: '#7FA3B2',
+          500: '#6F94A6',
+          600: '#587989',
+          700: '#465F6C',
+        },
+        // Soft sage — secondary/confirmation accent, used sparingly.
+        meadow: {
+          50: '#EFF3EC',
+          100: '#DCE6D6',
+          200: '#BFD3B4',
+          300: '#A3BE95',
+          400: '#93AA89',
+          500: '#7C9473',
+          600: '#63775B',
+        },
+        // Warm clay — reserved for the ambient login gradient only, never UI chrome.
+        ember: {
+          100: '#F3DCC9',
+          300: '#E7BBA0',
+          400: '#D89A78',
+          500: '#C97C5D',
         },
       },
       fontFamily: {
-        sans: ['Nunito', 'Inter', 'system-ui', 'sans-serif'],
+        // Ambient default everywhere: a calm text serif, not a UI grotesque.
+        sans: ['"Newsreader"', 'Georgia', 'ui-serif', 'serif'],
+        // Used sparingly, for hero moments and section titles only.
+        display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
+        // Dates, figures, chart data — the logbook texture.
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
       borderRadius: {
-        xl2: '1.25rem',
+        xl2: '0.875rem',
       },
       keyframes: {
         'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
@@ -44,10 +70,25 @@ export default {
           from: { opacity: '0', transform: 'translateY(8px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
+        'slide-in-page': {
+          from: { opacity: '0', transform: 'translateX(10px)' },
+          to: { opacity: '1', transform: 'translateX(0)' },
+        },
+        breathe: {
+          '0%, 100%': { opacity: '0.35', transform: 'scale(0.85)' },
+          '50%': { opacity: '1', transform: 'scale(1)' },
+        },
+        draw: {
+          from: { strokeDashoffset: '1' },
+          to: { strokeDashoffset: '0' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 200ms ease-out',
         'slide-up': 'slide-up 250ms ease-out',
+        'slide-in-page': 'slide-in-page 220ms ease-out',
+        breathe: 'breathe 1.4s ease-in-out infinite',
+        draw: 'draw 400ms ease-out forwards',
       },
     },
   },

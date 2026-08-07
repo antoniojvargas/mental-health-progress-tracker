@@ -95,7 +95,7 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
     setSubmitting(true);
     try {
       await logsApi.create(form);
-      toast.show('Registro guardado. Gracias por tomarte el tiempo hoy.');
+      toast.show('Registro guardado. Gracias por tomarte el tiempo hoy.', 'success');
       onSaved();
       handleClose();
     } catch {
@@ -107,16 +107,21 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
 
   return (
     <Modal open={open} onClose={handleClose} title="¿Cómo ha sido tu día?">
-      <div className="mb-5 flex gap-1.5" aria-hidden="true">
+      <div className="mb-5 flex items-center" aria-hidden="true">
         {STEPS.map((_, i) => (
-          <div key={i} className={`h-1 flex-1 rounded-full ${i <= step ? 'bg-sage-400' : 'bg-calm-100'}`} />
+          <div key={i} className="flex flex-1 items-center last:flex-none">
+            <span className={`h-2 w-2 flex-none rounded-full ${i <= step ? 'bg-clearsky-500' : 'bg-ink-200'}`} />
+            {i < STEPS.length - 1 && (
+              <span className={`h-px flex-1 ${i < step ? 'bg-clearsky-300' : 'bg-ink-100'}`} />
+            )}
+          </div>
         ))}
       </div>
-      <p className="mb-4 text-xs font-semibold uppercase tracking-wide text-dusk-300">
+      <p className="mb-4 font-mono text-xs uppercase tracking-wide text-ink-400">
         Paso {step + 1} de {STEPS.length} · {STEPS[step]}
       </p>
 
-      <div className="space-y-5">
+      <div key={step} className="animate-slide-in-page space-y-5">
         {step === 0 && <MoodScale value={form.moodRating} onChange={(v) => update('moodRating', v)} />}
 
         {step === 1 && (
@@ -139,7 +144,7 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
               onChange={(v) => update('sleepQuality', v)}
             />
             <div>
-              <p className="mb-1.5 text-sm font-medium text-dusk-600">Disturbios (si hubo alguno)</p>
+              <p className="mb-1.5 text-sm font-medium text-ink-600">Disturbios (si hubo alguno)</p>
               <div className="flex flex-wrap gap-2">
                 {(Object.keys(DISTURBANCE_LABELS) as SleepDisturbance[]).map((d) => (
                   <button
@@ -149,8 +154,8 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
                     aria-pressed={form.sleepDisturbances.includes(d)}
                     className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-200 ${
                       form.sleepDisturbances.includes(d)
-                        ? 'border-transparent bg-dusk-500 text-white'
-                        : 'border-dusk-100 text-dusk-400 hover:bg-calm-50'
+                        ? 'border-transparent bg-ink-600 text-white'
+                        : 'border-ink-100 text-ink-400 hover:bg-paper-100'
                     }`}
                   >
                     {DISTURBANCE_LABELS[d]}
@@ -182,14 +187,14 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
               hint="1 es sin estrés, 10 es sentirte completamente desbordado."
             />
             <div>
-              <label htmlFor="activityType" className="mb-1.5 block text-sm font-medium text-dusk-600">
+              <label htmlFor="activityType" className="mb-1.5 block text-sm font-medium text-ink-600">
                 Actividad física
               </label>
               <select
                 id="activityType"
                 value={form.activityType ?? 'none'}
                 onChange={(e) => update('activityType', e.target.value as ActivityType)}
-                className="w-full rounded-xl2 border border-dusk-100 bg-white px-3 py-2 text-sm"
+                className="w-full rounded-xl2 border border-ink-100 bg-white px-3 py-2 text-sm"
               >
                 {(Object.keys(ACTIVITY_LABELS) as ActivityType[]).map((a) => (
                   <option key={a} value={a}>
@@ -210,14 +215,14 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
               />
             )}
             <div>
-              <label htmlFor="socialFrequency" className="mb-1.5 block text-sm font-medium text-dusk-600">
+              <label htmlFor="socialFrequency" className="mb-1.5 block text-sm font-medium text-ink-600">
                 Interacciones sociales
               </label>
               <select
                 id="socialFrequency"
                 value={form.socialFrequency}
                 onChange={(e) => update('socialFrequency', e.target.value as SocialFrequency)}
-                className="w-full rounded-xl2 border border-dusk-100 bg-white px-3 py-2 text-sm"
+                className="w-full rounded-xl2 border border-ink-100 bg-white px-3 py-2 text-sm"
               >
                 {(Object.keys(SOCIAL_LABELS) as SocialFrequency[]).map((s) => (
                   <option key={s} value={s}>
@@ -233,7 +238,7 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
           <div className="space-y-4">
             <SymptomPicker symptoms={form.symptoms} onChange={(s: Symptom[]) => update('symptoms', s)} />
             <div>
-              <label htmlFor="notes" className="mb-1.5 block text-sm font-medium text-dusk-600">
+              <label htmlFor="notes" className="mb-1.5 block text-sm font-medium text-ink-600">
                 Notas (opcional)
               </label>
               <textarea
@@ -242,7 +247,7 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
                 rows={3}
                 value={form.notes ?? ''}
                 onChange={(e) => update('notes', e.target.value || null)}
-                className="w-full rounded-xl2 border border-dusk-100 bg-white px-3 py-2 text-sm"
+                className="w-full rounded-xl2 border border-ink-100 bg-white px-3 py-2 text-sm"
                 placeholder="¿Algo más que quieras recordar de hoy?"
               />
             </div>

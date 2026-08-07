@@ -1,3 +1,4 @@
+import type { SVGProps } from 'react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -17,10 +18,10 @@ interface ChartPoint {
 export function TrendChart({ logs, metricKeys }: TrendChartProps) {
   if (logs.length === 0) {
     return (
-      <div className="flex h-72 flex-col items-center justify-center rounded-xl2 bg-calm-50 text-center">
-        <p className="text-3xl">🌱</p>
-        <p className="mt-2 font-medium text-dusk-500">Aún no hay datos</p>
-        <p className="text-sm text-dusk-300">Tu primer registro empieza la historia.</p>
+      <div className="flex h-72 flex-col items-center justify-center rounded-xl2 border border-ink-100 bg-paper-50 text-center">
+        <SunriseIcon className="h-8 w-8 text-ink-300" aria-hidden="true" />
+        <p className="mt-2 font-display font-medium text-ink-600">Aún no hay datos</p>
+        <p className="text-sm text-ink-400">Tu primer registro empieza la historia.</p>
       </div>
     );
   }
@@ -40,19 +41,19 @@ export function TrendChart({ logs, metricKeys }: TrendChartProps) {
   return (
     <ResponsiveContainer width="100%" height={288}>
       <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#eee9de" />
+        <CartesianGrid strokeDasharray="3 3" stroke="#EAE0CB" />
         <XAxis
           dataKey="logDate"
           tickFormatter={(value: string) => format(parseISO(value), 'd MMM', { locale: es })}
-          tick={{ fontSize: 12, fill: '#a8926f' }}
-          axisLine={{ stroke: '#eee9de' }}
+          tick={{ fontSize: 12, fill: '#8A9B97', fontFamily: '"IBM Plex Mono", monospace' }}
+          axisLine={{ stroke: '#EAE0CB' }}
           tickLine={false}
         />
         {scaleMetrics.length > 0 && (
           <YAxis
             yAxisId="scale"
             width={28}
-            tick={{ fontSize: 12, fill: '#a8926f' }}
+            tick={{ fontSize: 12, fill: '#8A9B97', fontFamily: '"IBM Plex Mono", monospace' }}
             axisLine={false}
             tickLine={false}
           />
@@ -62,7 +63,7 @@ export function TrendChart({ logs, metricKeys }: TrendChartProps) {
             yAxisId="hours"
             orientation="right"
             width={28}
-            tick={{ fontSize: 12, fill: '#a8926f' }}
+            tick={{ fontSize: 12, fill: '#8A9B97', fontFamily: '"IBM Plex Mono", monospace' }}
             axisLine={false}
             tickLine={false}
           />
@@ -99,8 +100,8 @@ function ChartTooltip({ active, label, payload, metrics }: ChartTooltipProps) {
   if (!active || !payload || !label) return null;
 
   return (
-    <div className="rounded-lg bg-dusk-700 px-3 py-2 text-xs text-white shadow-lg">
-      <p className="mb-1 font-semibold">{format(parseISO(label), "d 'de' MMMM", { locale: es })}</p>
+    <div className="rounded-lg bg-ink-700 px-3 py-2 text-xs text-white shadow-lg">
+      <p className="mb-1 font-mono font-medium">{format(parseISO(label), "d 'de' MMMM", { locale: es })}</p>
       {payload.map((entry) => {
         const metric = metrics.find((m) => m.key === entry.dataKey);
         if (!metric) return null;
@@ -112,5 +113,15 @@ function ChartTooltip({ active, label, payload, metrics }: ChartTooltipProps) {
         );
       })}
     </div>
+  );
+}
+
+function SunriseIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" {...props}>
+      <path d="M5 16a7 7 0 0 1 14 0" />
+      <path d="M3 16h18M12 3v3M5.6 8.6l1.4 1.4M18.4 8.6 17 10" />
+      <path d="M8 20h8" />
+    </svg>
   );
 }

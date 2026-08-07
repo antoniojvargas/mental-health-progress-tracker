@@ -30,9 +30,7 @@ export function MetricSelector({ selected, onChange }: MetricSelectorProps) {
             disabled={disabled}
             aria-pressed={active}
             className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-40 ${
-              active
-                ? 'border-transparent text-white'
-                : 'border-dusk-100 bg-white text-dusk-500 hover:bg-calm-50'
+              active ? 'border-transparent text-white' : 'border-ink-100 bg-white text-ink-500 hover:bg-paper-100'
             }`}
             style={active ? { backgroundColor: metric.color } : undefined}
           >

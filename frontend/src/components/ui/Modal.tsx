@@ -54,23 +54,23 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
   if (!open) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-40 flex items-end justify-center bg-dusk-700/30 backdrop-blur-sm sm:items-center">
+    <div className="fixed inset-0 z-40 flex items-end justify-center bg-ink-700/30 backdrop-blur-sm sm:items-center">
       <div
         ref={containerRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="animate-slide-up max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-xl2 bg-white p-6 shadow-xl sm:rounded-xl2"
+        className="animate-slide-up max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-xl2 border border-ink-100 bg-paper-50 p-6 shadow-xl sm:rounded-xl2"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 id="modal-title" className="text-lg font-bold text-dusk-700">
+          <h2 id="modal-title" className="font-display text-lg font-semibold text-ink-700">
             {title}
           </h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="rounded-full p-1.5 text-dusk-400 hover:bg-calm-100"
+            className="rounded-lg p-1.5 text-ink-400 hover:bg-paper-200"
           >
             ✕
           </button>

@@ -1,0 +1,16 @@
+# Used by the prod builds (repo-root build context) — backend/.dockerignore and
+# frontend/.dockerignore cover the same excludes for the dev builds (per-package context).
+.git
+.github
+docs
+e2e
+**/node_modules
+**/dist
+**/coverage
+backend/tests
+frontend/src/**/*.spec.*
+.env
+.env.*
+!.env.example
+secrets/*.txt
+*.md

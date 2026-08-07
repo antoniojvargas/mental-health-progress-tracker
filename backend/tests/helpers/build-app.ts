@@ -5,7 +5,9 @@ import { jwtService } from '../../src/modules/auth/jwt.service.js';
 
 export const app = createApp();
 
-export async function createTestUser(overrides: Partial<{ googleId: string; email: string; name: string }> = {}) {
+export async function createTestUser(
+  overrides: Partial<{ googleId: string; email: string; name: string }> = {},
+) {
   const suffix = Math.random().toString(36).slice(2, 8);
   const user = await userRepository.upsertByGoogleId({
     googleId: overrides.googleId ?? `google-${suffix}`,

@@ -26,7 +26,13 @@ const ACTIVITY_TYPES = [
   'sports',
   'other',
 ] as const satisfies readonly ActivityType[];
-const SOCIAL_FREQUENCIES = ['none', 'rare', 'occasional', 'frequent', 'daily'] as const satisfies readonly SocialFrequency[];
+const SOCIAL_FREQUENCIES = [
+  'none',
+  'rare',
+  'occasional',
+  'frequent',
+  'daily',
+] as const satisfies readonly SocialFrequency[];
 const SYMPTOM_TYPES = [
   'low_mood',
   'hopelessness',

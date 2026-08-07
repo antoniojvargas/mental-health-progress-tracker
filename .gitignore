@@ -69,6 +69,15 @@ web_modules/
 .env
 .env.*
 !.env.example
+!.env.production.example
+
+# Docker secrets (docker-compose.prod.yml) — real values never committed
+secrets/*.txt
+
+# Playwright
+e2e/test-results/
+e2e/playwright-report/
+e2e/.cache/
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

@@ -40,9 +40,14 @@ export function DashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             {user?.avatarUrl && (
-              <img src={user.avatarUrl} alt="" className="h-8 w-8 rounded-full" referrerPolicy="no-referrer" />
+              <img
+                src={user.avatarUrl}
+                alt=""
+                className="h-8 w-8 rounded-full"
+                referrerPolicy="no-referrer"
+              />
             )}
-            <Button variant="ghost" onClick={() => logout()} className="!px-3 !py-1.5 text-sm">
+            <Button variant="ghost" onClick={() => void logout()} className="!px-3 !py-1.5 text-sm">
               Salir
             </Button>
           </div>
@@ -87,9 +92,7 @@ export function DashboardPage() {
       <DailyLogModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSaved={() => {
-          refetch();
-        }}
+        onSaved={() => void refetch()}
         initialLog={todayLog}
       />
     </div>

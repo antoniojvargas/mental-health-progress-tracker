@@ -68,7 +68,8 @@ export const METRICS: MetricDef[] = [
     label: 'Carga de síntomas',
     color: '#33453F',
     axis: 'scale',
-    format: (l) => (l.symptoms.length ? l.symptoms.reduce((sum, s) => sum + s.severity, 0) / l.symptoms.length : 0),
+    format: (l) =>
+      l.symptoms.length ? l.symptoms.reduce((sum, s) => sum + s.severity, 0) / l.symptoms.length : 0,
     describe: (v) => (v === 0 ? 'sin síntomas' : `${v.toFixed(1)}/5`),
   },
 ];

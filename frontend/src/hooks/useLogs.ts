@@ -31,7 +31,10 @@ export function useLogs(mode: RangeMode) {
   }, [mode]);
 
   useEffect(() => {
-    refetch();
+    // Fetching on mount and whenever `mode` changes is exactly what effects are for — the
+    // resulting setState just happens to land after an await, not synchronously in the body.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void refetch();
   }, [refetch]);
 
   const mergeLog = useCallback((incoming: DailyLog) => {

@@ -28,7 +28,10 @@ function defaultRange(): { from: string; to: string } {
 }
 
 export const dailyLogService = {
-  async upsertLog(userId: string, input: CreateDailyLogInput): Promise<{ dto: DailyLogDto; created: boolean }> {
+  async upsertLog(
+    userId: string,
+    input: CreateDailyLogInput,
+  ): Promise<{ dto: DailyLogDto; created: boolean }> {
     const { log, created } = await dailyLogRepository.upsert(userId, input);
     const dto = toDailyLogDto(log);
 
@@ -41,7 +44,10 @@ export const dailyLogService = {
     return { dto, created };
   },
 
-  async listLogs(userId: string, range: { from?: string; to?: string }): Promise<{ data: DailyLogDto[]; meta: { from: string; to: string; count: number } }> {
+  async listLogs(
+    userId: string,
+    range: { from?: string; to?: string },
+  ): Promise<{ data: DailyLogDto[]; meta: { from: string; to: string; count: number } }> {
     const { from, to } = range.from && range.to ? { from: range.from, to: range.to } : defaultRange();
     const logs = await dailyLogRepository.findByUserAndRange(userId, from, to);
     return { data: logs.map(toDailyLogDto), meta: { from, to, count: logs.length } };

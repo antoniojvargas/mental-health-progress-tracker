@@ -1,5 +1,6 @@
 process.env.NODE_ENV = 'test';
-process.env.DATABASE_URL = process.env.DATABASE_URL ?? 'postgresql://mhpt_test:mhpt_test@localhost:5433/mhpt_test';
+process.env.DATABASE_URL =
+  process.env.DATABASE_URL ?? 'postgresql://mhpt_test:mhpt_test@localhost:5433/mhpt_test';
 process.env.JWT_SECRET = 'test-secret-not-for-production-use';
 process.env.GOOGLE_CLIENT_ID = 'test-client-id';
 process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';

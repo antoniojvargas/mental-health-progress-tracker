@@ -6,7 +6,13 @@ import { SliderField } from './SliderField.js';
 import { SymptomPicker } from './SymptomPicker.js';
 import { logsApi } from '../../services/logs.api.js';
 import { useToast } from '../ui/Toast.js';
-import type { ActivityType, CreateDailyLogInput, SleepDisturbance, SocialFrequency, Symptom } from '../../types/daily-log.js';
+import type {
+  ActivityType,
+  CreateDailyLogInput,
+  SleepDisturbance,
+  SocialFrequency,
+  Symptom,
+} from '../../types/daily-log.js';
 
 interface DailyLogModalProps {
   open: boolean;
@@ -81,7 +87,9 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
     const has = form.sleepDisturbances.includes(disturbance);
     update(
       'sleepDisturbances',
-      has ? form.sleepDisturbances.filter((d) => d !== disturbance) : [...form.sleepDisturbances, disturbance],
+      has
+        ? form.sleepDisturbances.filter((d) => d !== disturbance)
+        : [...form.sleepDisturbances, disturbance],
     );
   }
 
@@ -110,7 +118,9 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
       <div className="mb-5 flex items-center" aria-hidden="true">
         {STEPS.map((_, i) => (
           <div key={i} className="flex flex-1 items-center last:flex-none">
-            <span className={`h-2 w-2 flex-none rounded-full ${i <= step ? 'bg-clearsky-500' : 'bg-ink-200'}`} />
+            <span
+              className={`h-2 w-2 flex-none rounded-full ${i <= step ? 'bg-clearsky-500' : 'bg-ink-200'}`}
+            />
             {i < STEPS.length - 1 && (
               <span className={`h-px flex-1 ${i < step ? 'bg-clearsky-300' : 'bg-ink-100'}`} />
             )}
@@ -260,13 +270,13 @@ export function DailyLogModal({ open, onClose, onSaved, initialLog }: DailyLogMo
           Atrás
         </Button>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={handleSubmit} disabled={submitting}>
+          <Button variant="secondary" onClick={() => void handleSubmit()} disabled={submitting}>
             Guardar ahora
           </Button>
           {step < STEPS.length - 1 ? (
             <Button onClick={() => setStep((s) => Math.min(STEPS.length - 1, s + 1))}>Siguiente</Button>
           ) : (
-            <Button onClick={handleSubmit} disabled={submitting}>
+            <Button onClick={() => void handleSubmit()} disabled={submitting}>
               {submitting ? 'Guardando…' : 'Finalizar'}
             </Button>
           )}

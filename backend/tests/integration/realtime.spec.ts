@@ -58,7 +58,7 @@ describe('realtime updates', () => {
   });
 
   afterAll(async () => {
-    io.close();
+    await io.close();
     await new Promise<void>((resolve) => httpServer.close(() => resolve()));
   });
 
@@ -97,7 +97,9 @@ describe('realtime updates', () => {
     await Promise.all([waitForConnect(ownerClient), waitForConnect(bystanderClient)]);
 
     const logDate = yesterday();
-    const ownerReceived = new Promise<{ logDate: string }>((resolve) => ownerClient.once('log:created', resolve));
+    const ownerReceived = new Promise<{ logDate: string }>((resolve) =>
+      ownerClient.once('log:created', resolve),
+    );
     const bystanderReceivedAnything = new Promise<boolean>((resolve) => {
       bystanderClient.once('log:created', () => resolve(true));
       setTimeout(() => resolve(false), 500);

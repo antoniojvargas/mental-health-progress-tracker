@@ -1,12 +1,18 @@
 import type { Server as HttpServer } from 'node:http';
-import { Server } from 'socket.io';
+import { Server, type DefaultEventsMap } from 'socket.io';
 import cookie from 'cookie';
 import { env } from '../core/config/env.js';
 import { jwtService, SESSION_COOKIE_NAME } from '../modules/auth/jwt.service.js';
 import { userRoom } from './log-events.js';
 
-export function createSocketServer(httpServer: HttpServer): Server {
-  const io = new Server(httpServer, {
+interface SocketData {
+  userId: string;
+}
+
+type AppSocketServer = Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>;
+
+export function createSocketServer(httpServer: HttpServer): AppSocketServer {
+  const io: AppSocketServer = new Server(httpServer, {
     cors: { origin: env.FRONTEND_URL, credentials: true },
   });
 
@@ -25,7 +31,10 @@ export function createSocketServer(httpServer: HttpServer): Server {
   });
 
   io.on('connection', (socket) => {
-    socket.join(userRoom(socket.data.userId as string));
+    // join() resolves asynchronously to support adapters (e.g. Redis) that coordinate room
+    // membership across processes — the in-memory adapter used here settles it synchronously,
+    // so there's nothing meaningful to await.
+    void socket.join(userRoom(socket.data.userId));
   });
 
   return io;

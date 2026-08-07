@@ -59,8 +59,14 @@ describe('daily logs', () => {
     // would let both see "no existing row" and crash the loser on the unique constraint;
     // the atomic ON CONFLICT upsert in the repository must let both succeed.
     const [first, second] = await Promise.all([
-      request(app).post('/api/logs').set('Cookie', cookie).send(validLog({ logDate, moodRating: 3 })),
-      request(app).post('/api/logs').set('Cookie', cookie).send(validLog({ logDate, moodRating: 4 })),
+      request(app)
+        .post('/api/logs')
+        .set('Cookie', cookie)
+        .send(validLog({ logDate, moodRating: 3 })),
+      request(app)
+        .post('/api/logs')
+        .set('Cookie', cookie)
+        .send(validLog({ logDate, moodRating: 4 })),
     ]);
 
     expect([first.status, second.status].sort()).toEqual([200, 201]);
@@ -83,22 +89,35 @@ describe('daily logs', () => {
   it('rejects a logDate in the future', async () => {
     const { cookie } = await createTestUser();
     const futureDate = new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10);
-    const res = await request(app).post('/api/logs').set('Cookie', cookie).send(validLog({ logDate: futureDate }));
+    const res = await request(app)
+      .post('/api/logs')
+      .set('Cookie', cookie)
+      .send(validLog({ logDate: futureDate }));
     expect(res.status).toBe(400);
   });
 
-  it('never returns another user\'s logs', async () => {
+  it("never returns another user's logs", async () => {
     const userA = await createTestUser({ email: 'a@example.com' });
     const userB = await createTestUser({ email: 'b@example.com' });
 
-    await request(app).post('/api/logs').set('Cookie', userA.cookie).send(validLog({ logDate: '2026-08-02' }));
-    await request(app).post('/api/logs').set('Cookie', userB.cookie).send(validLog({ logDate: '2026-08-02' }));
+    await request(app)
+      .post('/api/logs')
+      .set('Cookie', userA.cookie)
+      .send(validLog({ logDate: '2026-08-02' }));
+    await request(app)
+      .post('/api/logs')
+      .set('Cookie', userB.cookie)
+      .send(validLog({ logDate: '2026-08-02' }));
 
-    const resA = await request(app).get('/api/logs?from=2026-08-02&to=2026-08-02').set('Cookie', userA.cookie);
+    const resA = await request(app)
+      .get('/api/logs?from=2026-08-02&to=2026-08-02')
+      .set('Cookie', userA.cookie);
     expect(resA.body.data).toHaveLength(1);
     expect(resA.body.data[0].id).not.toBe(undefined);
 
-    const resB = await request(app).get('/api/logs?from=2026-08-02&to=2026-08-02').set('Cookie', userB.cookie);
+    const resB = await request(app)
+      .get('/api/logs?from=2026-08-02&to=2026-08-02')
+      .set('Cookie', userB.cookie);
     expect(resB.body.data).toHaveLength(1);
     expect(resA.body.data[0].id).not.toBe(resB.body.data[0].id);
   });

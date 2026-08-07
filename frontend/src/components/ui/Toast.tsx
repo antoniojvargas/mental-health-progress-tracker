@@ -62,7 +62,13 @@ function CheckIcon() {
       className="h-4 w-4 flex-none text-meadow-500"
       aria-hidden="true"
     >
-      <path d="M4 12.5l5 5L20 6" pathLength={1} strokeDasharray={1} strokeDashoffset={1} className="animate-draw" />
+      <path
+        d="M4 12.5l5 5L20 6"
+        pathLength={1}
+        strokeDasharray={1}
+        strokeDashoffset={1}
+        className="animate-draw"
+      />
     </svg>
   );
 }

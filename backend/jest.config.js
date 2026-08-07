@@ -20,4 +20,15 @@ export default {
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'text-summary', 'html', 'lcov'],
+  // A floor, not a ceiling — set a few points below the actual current numbers (see
+  // `npm run test:coverage`) so normal fluctuation doesn't break CI, while still catching a
+  // real regression (e.g. a whole new module landing with no tests at all).
+  coverageThreshold: {
+    global: {
+      statements: 70,
+      branches: 55,
+      functions: 75,
+      lines: 72,
+    },
+  },
 };

@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+build
+*.md
+package-lock.json
+.env
+.env.*
+!.env.example

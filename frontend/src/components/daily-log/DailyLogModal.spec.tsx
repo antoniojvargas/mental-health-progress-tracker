@@ -79,7 +79,9 @@ describe('DailyLogModal', () => {
     await user.click(screen.getByRole('button', { name: 'Guardar ahora' }));
 
     await waitFor(() => expect(logsApi.create).toHaveBeenCalledTimes(1));
-    expect(logsApi.create).toHaveBeenCalledWith(expect.objectContaining({ moodRating: 5, socialFrequency: 'occasional' }));
+    expect(logsApi.create).toHaveBeenCalledWith(
+      expect.objectContaining({ moodRating: 5, socialFrequency: 'occasional' }),
+    );
   });
 
   it('shows an error toast and keeps the modal open when saving fails', async () => {

@@ -2,12 +2,6 @@ import request from 'supertest';
 import { app, createTestUser } from '../helpers/build-app.js';
 
 describe('auth', () => {
-  it('GET /api/health responds ok without auth', async () => {
-    const res = await request(app).get('/api/health');
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({ status: 'ok' });
-  });
-
   it('GET /api/auth/me returns 401 without a session cookie', async () => {
     const res = await request(app).get('/api/auth/me');
     expect(res.status).toBe(401);

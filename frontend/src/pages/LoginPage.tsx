@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
 import { Logo } from '../components/ui/Logo.js';
@@ -6,11 +5,7 @@ import { Logo } from '../components/ui/Logo.js';
 export function LoginPage() {
   const { user, loading } = useAuth();
   const [params] = useSearchParams();
-  const [showError, setShowError] = useState(false);
-
-  useEffect(() => {
-    setShowError(params.get('error') === 'auth_failed');
-  }, [params]);
+  const showError = params.get('error') === 'auth_failed';
 
   if (!loading && user) {
     return <Navigate to="/dashboard" replace />;
@@ -39,7 +34,10 @@ export function LoginPage() {
         </p>
 
         {showError && (
-          <p className="mt-4 rounded-lg border border-ink-100 bg-paper-100 px-3 py-2 text-sm text-ink-600" role="alert">
+          <p
+            className="mt-4 rounded-lg border border-ink-100 bg-paper-100 px-3 py-2 text-sm text-ink-600"
+            role="alert"
+          >
             No pudimos completar el inicio de sesión. Inténtalo de nuevo.
           </p>
         )}

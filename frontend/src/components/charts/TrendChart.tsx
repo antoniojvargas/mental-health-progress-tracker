@@ -19,22 +19,24 @@ export function TrendChart({ logs, metricKeys }: TrendChartProps) {
   const metrics = metricKeys.map(getMetric);
   const scaleMetrics = metrics.filter((m) => m.axis === 'scale');
   const hoursMetrics = metrics.filter((m) => m.axis === 'hours');
+  // `metricKeys` is a fresh array reference every render even with the same content — this
+  // gives useMemo a stable primitive to depend on instead, so a named variable satisfies the
+  // "simple expression" deps requirement without recomputing on unrelated re-renders.
+  const metricKeysSignature = metricKeys.join(',');
 
   // Recomputed only when the underlying logs or the chosen metrics actually change, not on
   // every render of the dashboard around it (e.g. opening the daily-log modal). Must run
   // before the empty-state early return below — React hooks can't be called conditionally.
-  const data = useMemo<ChartPoint[]>(
-    () =>
-      logs.map((log) => {
-        const point: ChartPoint = { logDate: log.logDate };
-        for (const metric of metrics) {
-          point[metric.key] = metric.format(log);
-        }
-        return point;
-      }),
+  const data = useMemo<ChartPoint[]>(() => {
+    return logs.map((log) => {
+      const point: ChartPoint = { logDate: log.logDate };
+      for (const metric of metrics) {
+        point[metric.key] = metric.format(log);
+      }
+      return point;
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [logs, metricKeys.join(',')],
-  );
+  }, [logs, metricKeysSignature]);
 
   if (logs.length === 0) {
     return (
@@ -126,7 +128,14 @@ function ChartTooltip({ active, label, payload, metrics }: ChartTooltipProps) {
 
 function SunriseIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" {...props}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      {...props}
+    >
       <path d="M5 16a7 7 0 0 1 14 0" />
       <path d="M3 16h18M12 3v3M5.6 8.6l1.4 1.4M18.4 8.6 17 10" />
       <path d="M8 20h8" />

@@ -1,0 +1,15 @@
+{
+  "name": "mental-health-progress-tracker",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Dev tooling root (git hooks only) — backend/ and frontend/ remain independent npm packages, not an npm workspace.",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
+    "prettier": "^3.9.6"
+  }
+}

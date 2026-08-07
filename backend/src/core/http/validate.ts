@@ -11,6 +11,9 @@ export function validate(schema: ZodSchema, target: ValidateTarget = 'body') {
       next(new ValidationError('Invalid request data', result.error.issues));
       return;
     }
+    // Express types req.body/req.query as `any` — result.data is whatever shape the caller's
+    // own schema validated it into, which is the whole point of a generic validate() middleware.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     req[target] = result.data;
     next();
   };

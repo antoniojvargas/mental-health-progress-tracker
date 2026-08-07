@@ -9,6 +9,10 @@ export class ApiError extends Error {
   }
 }
 
+interface ErrorResponseBody {
+  error?: { code?: string; message?: string };
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`/api${path}`, {
     ...init,
@@ -20,10 +24,12 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     return undefined as T;
   }
 
-  const body = await res.json().catch(() => null);
+  // Response.json() is typed Promise<any> by the DOM lib — this cast is the one place that
+  // boundary gets crossed, into a shape we actually expect back from our own API.
+  const body = (await res.json().catch(() => null)) as ErrorResponseBody | T | null;
 
   if (!res.ok) {
-    const error = body?.error;
+    const error = (body as ErrorResponseBody | null)?.error;
     throw new ApiError(res.status, error?.code ?? 'UNKNOWN_ERROR', error?.message ?? 'Request failed');
   }
 

@@ -29,7 +29,7 @@ export const dailyLogRepository = {
    */
   async upsert(userId: string, input: CreateDailyLogInput): Promise<{ log: DailyLog; created: boolean }> {
     const e = toEntityInput(userId, input);
-    const [{ id, wasInserted }] = await AppDataSource.query(
+    const [{ id, wasInserted }] = await AppDataSource.query<{ id: string; wasInserted: boolean }[]>(
       `
         INSERT INTO daily_logs (
           user_id, log_date, mood_rating, anxiety_level, stress_level, sleep_hours, sleep_quality,

@@ -26,7 +26,9 @@ describe('SliderField', () => {
 
   it('calls onChange with a number when the slider moves', () => {
     const onChange = vi.fn();
-    render(<SliderField id="stress" label="Nivel de estrés" min={1} max={10} value={3} onChange={onChange} />);
+    render(
+      <SliderField id="stress" label="Nivel de estrés" min={1} max={10} value={3} onChange={onChange} />,
+    );
 
     fireEvent.change(screen.getByRole('slider'), { target: { value: '8' } });
 

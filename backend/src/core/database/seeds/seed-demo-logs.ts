@@ -1,7 +1,11 @@
 import 'reflect-metadata';
 import { AppDataSource } from '../data-source.js';
 import { User } from '../../../modules/user/user.entity.js';
-import { DailyLog, type SleepDisturbance, type Symptom } from '../../../modules/daily-log/daily-log.entity.js';
+import {
+  DailyLog,
+  type SleepDisturbance,
+  type Symptom,
+} from '../../../modules/daily-log/daily-log.entity.js';
 
 const DEMO_GOOGLE_ID = 'demo-seed-user';
 const DEMO_EMAIL = 'demo@mentalhealthtracker.dev';

@@ -26,20 +26,24 @@ describe('rate limiting', () => {
   it('blocks Google login attempts past the limit within the window', async () => {
     const app = createApp();
 
-    const responses = await Promise.all(Array.from({ length: 21 }, () => request(app).get('/api/auth/google')));
+    const responses = await Promise.all(
+      Array.from({ length: 21 }, () => request(app).get('/api/auth/google')),
+    );
     const statuses = responses.map((r) => r.status);
 
     expect(statuses.filter((s) => s === 302)).toHaveLength(20);
     expect(statuses.filter((s) => s === 429)).toHaveLength(1);
   });
 
-  it('blocks a user\'s daily-log writes past the limit, without touching another user\'s budget', async () => {
+  it("blocks a user's daily-log writes past the limit, without touching another user's budget", async () => {
     const app = createApp();
     const owner = await createTestUser();
     const other = await createTestUser();
 
     const responses = await Promise.all(
-      Array.from({ length: 31 }, () => request(app).post('/api/logs').set('Cookie', owner.cookie).send(validLog())),
+      Array.from({ length: 31 }, () =>
+        request(app).post('/api/logs').set('Cookie', owner.cookie).send(validLog()),
+      ),
     );
     const statuses = responses.map((r) => r.status);
 

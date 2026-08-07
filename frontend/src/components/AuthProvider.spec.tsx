@@ -6,7 +6,8 @@ import { useAuth } from '../hooks/useAuth.js';
 import { apiClient, ApiError } from '../services/api-client.js';
 
 vi.mock('../services/api-client.js', async () => {
-  const actual = await vi.importActual<typeof import('../services/api-client.js')>('../services/api-client.js');
+  const actual =
+    await vi.importActual<typeof import('../services/api-client.js')>('../services/api-client.js');
   return { ...actual, apiClient: { get: vi.fn(), post: vi.fn() } };
 });
 
@@ -16,7 +17,7 @@ function Consumer() {
   return (
     <div>
       <p>{user ? `Hola, ${user.name}` : 'Sin sesión'}</p>
-      <button onClick={() => logout()}>Salir</button>
+      <button onClick={() => void logout()}>Salir</button>
     </div>
   );
 }

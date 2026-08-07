@@ -14,6 +14,15 @@ export default mergeConfig(
         reporter: ['text', 'html'],
         include: ['src/**/*.{ts,tsx}'],
         exclude: ['src/main.tsx', 'src/test/**', 'src/**/*.spec.{ts,tsx}', 'src/types/**'],
+        // A floor, not a ceiling — a few points below the actual current numbers (see
+        // `npm run test:coverage`), so it catches a real regression without breaking CI on
+        // normal fluctuation.
+        thresholds: {
+          statements: 70,
+          branches: 65,
+          functions: 65,
+          lines: 72,
+        },
       },
     },
   }),

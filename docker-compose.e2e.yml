@@ -1,0 +1,10 @@
+# Override for docker-compose.yml (dev stack), used only for E2E runs. Sets NODE_ENV=test on
+# the backend so POST /api/auth/test-login registers — see auth.routes.ts and
+# auth.controller.ts#testLogin for why the E2E suite needs it. Never used for real dev or prod.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --build
+
+services:
+  backend:
+    environment:
+      NODE_ENV: test

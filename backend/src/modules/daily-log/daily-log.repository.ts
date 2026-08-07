@@ -71,12 +71,21 @@ export const dailyLogRepository = {
     return { log, created: wasInserted };
   },
 
-  async findByUserAndRange(userId: string, from: string, to: string): Promise<DailyLog[]> {
-    return repository()
+  async findByUserAndRange(
+    userId: string,
+    from: string,
+    to: string,
+    limit: number,
+    offset: number,
+  ): Promise<{ logs: DailyLog[]; total: number }> {
+    const [logs, total] = await repository()
       .createQueryBuilder('log')
       .where('log.user_id = :userId', { userId })
       .andWhere('log.log_date BETWEEN :from AND :to', { from, to })
       .orderBy('log.log_date', 'ASC')
-      .getMany();
+      .take(limit)
+      .skip(offset)
+      .getManyAndCount();
+    return { logs, total };
   },
 };

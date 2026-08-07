@@ -145,17 +145,24 @@ registry.registerPath({
   method: 'get',
   path: '/api/logs',
   tags: ['daily-log'],
-  summary: 'List logs for the signed-in user in a date range (defaults to the last 30 days, max 366).',
+  summary:
+    'List logs for the signed-in user in a date range (defaults to the last 30 days, max 366), paginated.',
   security: [{ [SESSION_COOKIE_SCHEME]: [] }],
   request: { query: listDailyLogsQuerySchema },
   responses: {
     200: {
-      description: 'Logs in range',
+      description: 'A page of logs in range',
       content: {
         'application/json': {
           schema: z.object({
             data: z.array(dailyLogResponseSchema),
-            meta: z.object({ from: z.string(), to: z.string(), count: z.number() }),
+            meta: z.object({
+              from: z.string(),
+              to: z.string(),
+              limit: z.number(),
+              offset: z.number(),
+              total: z.number(),
+            }),
           }),
         },
       },

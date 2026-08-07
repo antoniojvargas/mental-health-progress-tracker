@@ -13,7 +13,16 @@ FROM nginx:alpine AS runtime
 COPY --from=build /repo/frontend/dist /usr/share/nginx/html
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+# nginx:alpine already ships an unprivileged `nginx` user (uid 101) — it just isn't used by
+# default. Binding port 80 needs CAP_NET_BIND_SERVICE, so the runtime listens on 8080 instead
+# (see nginx.conf) and the compose port mapping does the 80->8080 translation on the host side.
+RUN chown -R nginx:nginx /usr/share/nginx/html /var/cache/nginx /var/log/nginx /etc/nginx/conf.d && \
+    touch /var/run/nginx.pid && \
+    chown nginx:nginx /var/run/nginx.pid
+
+USER nginx
+
+EXPOSE 8080
 
 HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=5 \
-  CMD wget -qO- http://localhost/ || exit 1
+  CMD wget -qO- http://localhost:8080/ || exit 1

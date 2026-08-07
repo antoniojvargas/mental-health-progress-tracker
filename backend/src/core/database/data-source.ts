@@ -19,4 +19,12 @@ export const AppDataSource = new DataSource({
   logging: env.NODE_ENV === 'development',
   entities: [User, DailyLog],
   migrations: [InitSchema1754500000000],
+  // Without this, `pg` falls back to its own default (max: 10) with no idle/connect timeouts —
+  // a stalled connection can then sit in the pool forever instead of getting recycled.
+  extra: {
+    max: 10,
+    min: 2,
+    idleTimeoutMillis: 30_000,
+    connectionTimeoutMillis: 5_000,
+  },
 });

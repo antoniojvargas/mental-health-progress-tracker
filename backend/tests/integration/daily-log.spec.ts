@@ -122,6 +122,30 @@ describe('daily logs', () => {
     expect(resA.body.data[0].id).not.toBe(resB.body.data[0].id);
   });
 
+  it('GET /api/logs paginates with limit/offset and reports total separately from page size', async () => {
+    const { cookie } = await createTestUser();
+    for (let day = 1; day <= 5; day++) {
+      await request(app)
+        .post('/api/logs')
+        .set('Cookie', cookie)
+        .send(validLog({ logDate: `2026-08-0${day}` }));
+    }
+
+    const page1 = await request(app)
+      .get('/api/logs?from=2026-08-01&to=2026-08-05&limit=2&offset=0')
+      .set('Cookie', cookie);
+    expect(page1.body.data).toHaveLength(2);
+    expect(page1.body.data[0].logDate).toBe('2026-08-01');
+    expect(page1.body.meta).toMatchObject({ limit: 2, offset: 0, total: 5 });
+
+    const page2 = await request(app)
+      .get('/api/logs?from=2026-08-01&to=2026-08-05&limit=2&offset=2')
+      .set('Cookie', cookie);
+    expect(page2.body.data).toHaveLength(2);
+    expect(page2.body.data[0].logDate).toBe('2026-08-03');
+    expect(page2.body.meta).toMatchObject({ limit: 2, offset: 2, total: 5 });
+  });
+
   it('GET /api/logs/today returns null when nothing was logged today', async () => {
     const { cookie } = await createTestUser();
     const res = await request(app).get('/api/logs/today').set('Cookie', cookie);

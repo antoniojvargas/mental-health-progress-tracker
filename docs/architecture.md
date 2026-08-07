@@ -184,6 +184,29 @@ que pudiera desincronizarse del validador real. Servido en `/api/docs` vía `swa
 con el CSP de Helmet relajado solo en esa ruta (Swagger UI necesita scripts inline; el resto de
 la API no).
 
+## Límites conocidos de escalar a múltiples réplicas del backend
+
+Documentado explícitamente porque ambos son reales y, a diferencia del resto de esta sección,
+no tienen mitigación en el código — son el precio consciente de optimizar para una sola
+instancia en el alcance de este assessment:
+
+- **Socket.IO sin adaptador Redis**: cada instancia del backend mantiene sus propias rooms
+  (`user:<userId>`) en memoria. Con una sola réplica esto es correcto y suficiente. Con más de
+  una réplica detrás de un load balancer, un usuario conectado a la instancia A nunca recibiría
+  el evento `log:created` si esa escritura la procesó la instancia B — el emisor solo conoce sus
+  propios sockets. La solución estándar es `@socket.io/redis-adapter`, deliberadamente omitida
+  aquí para no añadir una dependencia de infraestructura (Redis) que este alcance no justifica.
+- **`express-rate-limit` con su store en memoria por defecto** (`backend/src/core/http/rate-limit.ts`
+  no configura `store:`): el contador de intentos vive en el proceso Node, no compartido. Con N
+  réplicas, un cliente que reparte sus requests entre ellas ve efectivamente N× el límite
+  configurado — el rate limiting sigue funcionando por instancia, pero deja de ser una garantía
+  global. Igual que arriba, la mitigación real (un store de Redis para `express-rate-limit`)
+  añade la misma dependencia que se decidió no introducir.
+
+Si este servicio se escalara a múltiples réplicas, ambos puntos se resuelven con la misma pieza
+de infraestructura (Redis), no dos soluciones separadas — otra razón para tratarlos como una
+decisión conjunta y no como un descuido en cada uno por separado.
+
 ## Por qué `react-router-dom` sigue con una advertencia `high` de `npm audit`
 
 Es una excepción aceptada, no un descuido: la única versión publicada en `latest` (7.18.2) sigue

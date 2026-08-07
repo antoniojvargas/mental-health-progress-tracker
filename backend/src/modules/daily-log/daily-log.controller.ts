@@ -13,7 +13,7 @@ export const dailyLogController = {
 
   list: async (req: Request, res: Response): Promise<void> => {
     if (!req.user) throw new UnauthorizedError();
-    const query = req.query as ListDailyLogsQuery;
+    const query = req.query as unknown as ListDailyLogsQuery;
     const result = await dailyLogService.listLogs(req.user.id, query);
     res.status(200).json(result);
   },

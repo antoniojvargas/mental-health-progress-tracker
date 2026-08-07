@@ -46,11 +46,23 @@ export const dailyLogService = {
 
   async listLogs(
     userId: string,
-    range: { from?: string; to?: string },
-  ): Promise<{ data: DailyLogDto[]; meta: { from: string; to: string; count: number } }> {
+    range: { from?: string; to?: string; limit: number; offset: number },
+  ): Promise<{
+    data: DailyLogDto[];
+    meta: { from: string; to: string; limit: number; offset: number; total: number };
+  }> {
     const { from, to } = range.from && range.to ? { from: range.from, to: range.to } : defaultRange();
-    const logs = await dailyLogRepository.findByUserAndRange(userId, from, to);
-    return { data: logs.map(toDailyLogDto), meta: { from, to, count: logs.length } };
+    const { logs, total } = await dailyLogRepository.findByUserAndRange(
+      userId,
+      from,
+      to,
+      range.limit,
+      range.offset,
+    );
+    return {
+      data: logs.map(toDailyLogDto),
+      meta: { from, to, limit: range.limit, offset: range.offset, total },
+    };
   },
 
   async getToday(userId: string): Promise<DailyLogDto | null> {
